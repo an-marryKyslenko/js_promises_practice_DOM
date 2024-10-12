@@ -18,7 +18,6 @@ function resetTimer() {
 }
 
 function handleFirstClick() {
-  isClickedLeft = true;
   firstPromise();
   resetTimer();
 
@@ -36,9 +35,7 @@ document.addEventListener('mousedown', (e) => {
     isClickedRight = true;
   }
 
-  if (isClickedLeft !== isClickedRight) {
-    secondPromise();
-  }
+  secondPromise();
 
   if (isClickedLeft && isClickedRight) {
     thirdPromise();
@@ -58,20 +55,22 @@ function firstPromise() {
     }
   })
     .then((result) => {
-      if(!notification.classList.contains('success')){
+      if (!notification.classList.contains('success')) {
         notification.classList.add('success');
       }
-      if(notification.classList.contains('error')) {
+
+      if (notification.classList.contains('error')) {
         notification.classList.remove('error');
       }
       notification.innerText = result;
       document.body.prepend(notification);
     })
     .catch((error) => {
-      if(!notification.classList.contains('error')){
+      if (!notification.classList.contains('error')) {
         notification.classList.add('error');
       }
-      if(notification.classList.contains('success')) {
+
+      if (notification.classList.contains('success')) {
         notification.classList.remove('success');
       }
       notification.innerText = error.message;
@@ -81,27 +80,28 @@ function firstPromise() {
 
 function secondPromise() {
   return new Promise((resolve, reject) => {
-    resolve('Second promise was resolved');
-  }).then((result) => {
     setTimeout(() => {
+      resolve('Second promise was resolved');
+  }, 1000);
+  }).then((result) => {
       notification.classList.add('success');
       notification.classList.remove('error');
       notification.innerText = result;
       document.body.prepend(notification);
-    }, 1000);
+
   });
 }
 
 function thirdPromise() {
   return new Promise((resolve, reject) => {
-    resolve('Third promise was resolved');
-  }).then((result) => {
     setTimeout(() => {
+      resolve('Third promise was resolved');
+  }, 500);
+  }).then((result) => {
       notification.classList.add('success');
       notification.classList.remove('error');
       notification.innerText = result;
       document.body.prepend(notification);
-    }, 2000);
   });
 }
 
