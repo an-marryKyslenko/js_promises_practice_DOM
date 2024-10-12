@@ -17,11 +17,19 @@ function resetTimer() {
   }, 3000);
 }
 
+function handleFirstClick() {
+  isClickedLeft = true;
+  firstPromise();
+  resetTimer();
+
+  document.removeEventListener('click', handleFirstClick);
+}
+
+document.addEventListener('click', handleFirstClick);
+
 document.addEventListener('mousedown', (e) => {
   if (e.button === 0) {
     isClickedLeft = true;
-    firstPromise();
-    resetTimer();
   }
 
   if (e.button === 2) {
@@ -41,7 +49,7 @@ document.addEventListener('contextmenu', (e) => {
   e.preventDefault();
 });
 
-async function firstPromise() {
+function firstPromise() {
   return new Promise((resolve, reject) => {
     if (isClickedLeft) {
       resolve('First promise was resolved');
@@ -50,19 +58,28 @@ async function firstPromise() {
     }
   })
     .then((result) => {
-      notification.classList.add('success');
-      notification.classList.remove('error');
+      if(!notification.classList.contains('success')){
+        notification.classList.add('success');
+      }
+      if(notification.classList.contains('error')) {
+        notification.classList.remove('error');
+      }
       notification.innerText = result;
       document.body.prepend(notification);
     })
     .catch((error) => {
-      notification.classList.add('error');
+      if(!notification.classList.contains('error')){
+        notification.classList.add('error');
+      }
+      if(notification.classList.contains('success')) {
+        notification.classList.remove('success');
+      }
       notification.innerText = error.message;
       document.body.prepend(notification);
     });
 }
 
-async function secondPromise() {
+function secondPromise() {
   return new Promise((resolve, reject) => {
     resolve('Second promise was resolved');
   }).then((result) => {
@@ -75,7 +92,7 @@ async function secondPromise() {
   });
 }
 
-async function thirdPromise() {
+function thirdPromise() {
   return new Promise((resolve, reject) => {
     resolve('Third promise was resolved');
   }).then((result) => {
